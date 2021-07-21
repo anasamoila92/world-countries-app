@@ -11,4 +11,13 @@ $sides: (top, bottom, left, right);
       padding-#{$side}: #{$space}px !important;
     }
   }
+
+  .margin-#{$space} {
+    margin: #{$space}px !important;
+  }
+
+  .padding-#{$space} {
+    padding: #{$space}px !important;
+  }
+
 }

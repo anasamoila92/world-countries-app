@@ -25,7 +25,7 @@ function HomePage() {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('name');
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(15);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     useEffect(() => {
         fetch('https://restcountries.eu/rest/v2/all')
@@ -210,7 +210,7 @@ function HomePage() {
     ];
 
     return (
-        <div>
+        <div className='padding-20'>
           {countries &&
             <TableContainer component={Paper}>
                 <Table aria-label="world countries" size="small">
@@ -241,7 +241,7 @@ function HomePage() {
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                                rowsPerPageOptions={[15, 50, 100, { label: 'All', value: -1 }]}
+                                rowsPerPageOptions={[10, 20, 50, 100, { label: 'All', value: -1 }]}
                                 colSpan={3}
                                 count={countries.length}
                                 rowsPerPage={rowsPerPage}
