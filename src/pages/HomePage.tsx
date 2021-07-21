@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import {useEffect, useState} from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination,
-    makeStyles, useTheme, IconButton} from '@material-ui/core';
+    makeStyles, useTheme, IconButton, TableSortLabel} from '@material-ui/core';
 import { LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft } from '@material-ui/icons';
 
 interface TablePaginationActionsProps {
@@ -9,6 +9,14 @@ interface TablePaginationActionsProps {
     onPageChange: any;
     page: number;
     rowsPerPage: number;
+}
+
+interface HeadCellProps {
+    id: string;
+    align: 'left' | 'right' | 'center';
+    disablePadding: boolean;
+    label: string;
+    sortable: boolean;
 }
 
 function HomePage() {
@@ -44,6 +52,30 @@ function HomePage() {
         root: {
             flexShrink: 0,
             marginLeft: theme.spacing(2.5),
+        },
+    }));
+
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            width: '100%',
+        },
+        paper: {
+            width: '100%',
+            marginBottom: theme.spacing(2),
+        },
+        table: {
+            minWidth: 750,
+        },
+        visuallyHidden: {
+            border: 0,
+            clip: 'rect(0 0 0 0)',
+            height: 1,
+            margin: -1,
+            overflow: 'hidden',
+            padding: 0,
+            position: 'absolute',
+            top: 20,
+            width: 1,
         },
     }));
 
@@ -124,20 +156,69 @@ function HomePage() {
         return stabilizedThis.map((el: any) => el[0]);
     }
 
+    const handleRequestSort = (event: any, property: string) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    const EnhancedTableHead = (props: any) => {
+        const classes = useStyles();
+        const { order, orderBy, onRequestSort } = props;
+        const createSortHandler = (property: any) => (event: any) => {
+            onRequestSort(event, property);
+        };
+
+        return (
+            <TableHead>
+                <TableRow>
+                    {headCells.map((headCell: HeadCellProps) => (
+                        <TableCell
+                            key={headCell.id}
+                            align={headCell.align}
+                            padding={headCell.disablePadding ? 'none' : 'normal'}
+                            sortDirection={orderBy === headCell.id ? order : false}
+                        >
+                            {headCell.sortable
+                                ? <TableSortLabel
+                                    active={orderBy === headCell.id}
+                                    direction={orderBy === headCell.id ? order : 'asc'}
+                                    onClick={createSortHandler(headCell.id)}
+                                >
+                                    {headCell.label}
+                                    {orderBy === headCell.id ? (
+                                        <span className={classes.visuallyHidden}>
+                                            {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                        </span>
+                                    ) : null}
+                                </TableSortLabel>
+                                : <span>{headCell.label}</span>
+                            }
+                        </TableCell>
+                    ))}
+                </TableRow>
+            </TableHead>
+        );
+    }
+
+    const headCells : HeadCellProps[] = [
+        { id: 'flag', disablePadding: true, label: t('homepage.flag'), align: 'center', sortable: false },
+        { id: 'name', disablePadding: false, label: t('homepage.name'), align: 'left', sortable: true },
+        { id: 'population', disablePadding: false, label: t('homepage.population'), align: 'right', sortable: true },
+        { id: 'mainLanguage', disablePadding: false, label: t('homepage.mainLanguage'), align: 'right', sortable: false },
+        { id: 'mainCurrency', disablePadding: false, label: t('homepage.mainCurrency'), align: 'right', sortable: false },
+    ];
+
     return (
         <div>
           {countries &&
             <TableContainer component={Paper}>
                 <Table aria-label="world countries" size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center" style={{ width: '60px'}}>{t('homepage.flag')}</TableCell>
-                            <TableCell>{t('homepage.name')}</TableCell>
-                            <TableCell align="right">{t('homepage.population')}</TableCell>
-                            <TableCell align="right">{t('homepage.mainLanguage')}</TableCell>
-                            <TableCell align="right">{t('homepage.mainCurrency')}</TableCell>
-                        </TableRow>
-                    </TableHead>
+                    <EnhancedTableHead
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                    />
                     <TableBody>
                       {stableSort(countries, getComparator(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
