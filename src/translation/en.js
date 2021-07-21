@@ -4,7 +4,8 @@ const translationEN = {
     name: 'Name',
     population: 'Population',
     mainLanguage: 'Main Language',
-    mainCurrency: 'Main Currency'
+    mainCurrency: 'Main Currency',
+    filters: 'Filters'
   },
   notFound: {
     error404: 'Error 404',

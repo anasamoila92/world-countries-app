@@ -1,8 +1,10 @@
 import { useTranslation } from "react-i18next";
 import {useEffect, useState} from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination,
-    makeStyles, useTheme, IconButton, TableSortLabel} from '@material-ui/core';
-import { LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft } from '@material-ui/icons';
+import {
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination,
+    makeStyles, useTheme, IconButton, TableSortLabel, Tooltip, Button
+} from '@material-ui/core';
+import { LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft, FilterList } from '@material-ui/icons';
 
 interface TablePaginationActionsProps {
     count: number;
@@ -211,54 +213,63 @@ function HomePage() {
 
     return (
         <div className='padding-20'>
-          {countries &&
-            <TableContainer component={Paper}>
-                <Table aria-label="world countries" size="small">
-                    <EnhancedTableHead
-                        order={order}
-                        orderBy={orderBy}
-                        onRequestSort={handleRequestSort}
-                    />
-                    <TableBody>
-                      {stableSort(countries, getComparator(order, orderBy))
-                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                          .map((country: any, index: number) => {
-                              return (
-                                <TableRow key={index}>
-                                    <TableCell align="center" style={{ width: '60px'}}>
-                                        <img src={country.flag} style={{width: '30px'}}/>
-                                    </TableCell>
-                                    <TableCell component="th" scope="row" >{country.name}</TableCell>
-                                    <TableCell align="right">{country.population.toLocaleString()}</TableCell>
-                                    <TableCell align="right">{country.languages[0].name}</TableCell>
-                                    <TableCell align="right">
-                                        {country.currencies[0].symbol + " (" + country.currencies[0].code + ")"}
-                                    </TableCell>
-                                </TableRow>
-                            )
-                          })}
-                    </TableBody>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                rowsPerPageOptions={[10, 20, 50, 100, { label: 'All', value: -1 }]}
-                                colSpan={3}
-                                count={countries.length}
-                                rowsPerPage={rowsPerPage}
-                                page={page}
-                                SelectProps={{
-                                    inputProps: { 'aria-label': 'rows per page' },
-                                    native: true,
-                                }}
-                                onPageChange={handleChangePage}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                ActionsComponent={TablePaginationActions}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </TableContainer>
-          }
+            {countries &&
+            <div>
+                <div className='text-align-right margin-bottom-10'>
+                    <Tooltip title="Filter list">
+                        <Button startIcon={<FilterList />}>
+                            {t('homepage.filters')}
+                        </Button>
+                    </Tooltip>
+                </div>
+                <TableContainer component={Paper}>
+                    <Table aria-label="world countries" size="small">
+                        <EnhancedTableHead
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={handleRequestSort}
+                        />
+                        <TableBody>
+                            {stableSort(countries, getComparator(order, orderBy))
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((country: any, index: number) => {
+                                    return (
+                                        <TableRow key={index}>
+                                            <TableCell align="center" style={{ width: '60px'}}>
+                                                <img src={country.flag} style={{width: '30px'}} />
+                                            </TableCell>
+                                            <TableCell component="th" scope="row" >{country.name}</TableCell>
+                                            <TableCell align="right">{country.population.toLocaleString()}</TableCell>
+                                            <TableCell align="right">{country.languages[0].name}</TableCell>
+                                            <TableCell align="right">
+                                                {country.currencies[0].symbol + " (" + country.currencies[0].code + ")"}
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                })}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[10, 20, 50, 100, { label: 'All', value: -1 }]}
+                                    colSpan={3}
+                                    count={countries.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    SelectProps={{
+                                        inputProps: { 'aria-label': 'rows per page' },
+                                        native: true,
+                                    }}
+                                    onPageChange={handleChangePage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                    ActionsComponent={TablePaginationActions}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </TableContainer>
+            </div>
+            }
         </div>
     );
 }
