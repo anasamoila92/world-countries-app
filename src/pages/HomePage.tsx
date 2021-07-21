@@ -47,7 +47,7 @@ function HomePage() {
         },
     }));
 
-    function TablePaginationActions(props:  TablePaginationActionsProps) {
+    const TablePaginationActions = (props:  TablePaginationActionsProps) => {
         const classes = useStyles1();
         const theme = useTheme();
         const { count, page, rowsPerPage, onPageChange } = props;
@@ -98,13 +98,13 @@ function HomePage() {
         );
     }
 
-    function getComparator(order: string, orderBy: string) {
+    const getComparator = (order: string, orderBy: string) => {
         return order === 'desc'
             ? (a: any, b: any) => descendingComparator(a, b, orderBy)
             : (a: any, b: any) => -descendingComparator(a, b, orderBy);
     }
 
-    function descendingComparator(a: any, b: any, orderBy: any) {
+    const descendingComparator = (a: any, b: any, orderBy: any) => {
         if (b[orderBy] < a[orderBy]) {
             return -1;
         }
@@ -114,7 +114,7 @@ function HomePage() {
         return 0;
     }
 
-    function stableSort(array: any, comparator: any) {
+    const stableSort = (array: any, comparator: any) => {
         const stabilizedThis = array.map((el: any, index: number) => [el, index]);
         stabilizedThis.sort((a: any, b: any) => {
             const order = comparator(a[0], b[0]);
