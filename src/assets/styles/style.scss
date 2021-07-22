@@ -1,8 +1,32 @@
 @import 'helper';
 
 body {
-  background: #ffffff;
+  background: #f5f5f5;
 }
 a {
   text-decoration: none;
+}
+
+.countries-list-header {
+  background: #000000;
+
+  th {
+    color: #ffffff !important;
+
+    & > span[role=button] {
+      color: inherit !important;
+
+      &:hover {
+        color: #dbdbdb !important;
+        svg {
+          color: inherit !important;
+          opacity: 1 !important;
+        }
+      }
+    }
+
+    svg {
+      color: inherit !important;
+    }
+  }
 }

@@ -4,6 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomePage from './pages/HomePage';
 import NotFound from './pages/NotFound';
+import CountryDetail from './pages/CountryDetail';
 import './assets/styles/style.scss';
 import './translation/i18n';
 
@@ -12,7 +13,7 @@ ReactDOM.render(
         <Router>
             <Switch>
                 <Route path="/" exact component={HomePage} />
-                {/*<Route path="/personality-test" exact component={TestPage} />*/}
+                <Route path="/country/:countryCode" exact component={CountryDetail} />
                 <Route component={NotFound} />
             </Switch>
         </Router>

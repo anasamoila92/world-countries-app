@@ -2,9 +2,12 @@ import { useTranslation } from "react-i18next";
 import {useEffect, useState} from "react";
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter, TablePagination,
-    makeStyles, useTheme, IconButton, TableSortLabel, Tooltip, Button
+    useTheme, IconButton, TableSortLabel, LinearProgress, withStyles, makeStyles
 } from '@material-ui/core';
-import { LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft, FilterList } from '@material-ui/icons';
+import { LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft } from '@material-ui/icons';
+import HomePageFilters from "./components/HomePageFilters";
+import { useHistory } from "react-router-dom";
+
 
 interface TablePaginationActionsProps {
     count: number;
@@ -21,24 +24,58 @@ interface HeadCellProps {
     sortable: boolean;
 }
 
+const StyledTableRow = withStyles((theme) => ({
+    root: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.action.hover,
+        },
+    },
+}))(TableRow);
+
+const useStyles1 = makeStyles((theme) => ({
+    root: {
+        flexShrink: 0,
+        marginLeft: theme.spacing(2.5),
+    },
+}));
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+    },
+    paper: {
+        width: '100%',
+        marginBottom: theme.spacing(2),
+    },
+    table: {
+        minWidth: 750,
+    },
+    visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+    },
+}));
+
 function HomePage() {
     const {t} = useTranslation();
+    const history = useHistory();
     const [countries, setCountries] = useState([]);
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('name');
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [fetchingData, setFetchingData] = useState(false);
 
     useEffect(() => {
-        fetch('https://restcountries.eu/rest/v2/all')
-            .then(response => response.json())
-            .then(data => {
-                setCountries(data);
-                console.log(data)
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        setFetchingData(true);
+        fetchDataFromUrl('https://restcountries.eu/rest/v2/all?fields=flag;name;population;languages;currencies')
     }, [])
 
     const handleChangePage = (event: any, newPage: number) => {
@@ -49,37 +86,6 @@ function HomePage() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
-    const useStyles1 = makeStyles((theme) => ({
-        root: {
-            flexShrink: 0,
-            marginLeft: theme.spacing(2.5),
-        },
-    }));
-
-    const useStyles = makeStyles((theme) => ({
-        root: {
-            width: '100%',
-        },
-        paper: {
-            width: '100%',
-            marginBottom: theme.spacing(2),
-        },
-        table: {
-            minWidth: 750,
-        },
-        visuallyHidden: {
-            border: 0,
-            clip: 'rect(0 0 0 0)',
-            height: 1,
-            margin: -1,
-            overflow: 'hidden',
-            padding: 0,
-            position: 'absolute',
-            top: 20,
-            width: 1,
-        },
-    }));
 
     const TablePaginationActions = (props:  TablePaginationActionsProps) => {
         const classes = useStyles1();
@@ -173,7 +179,7 @@ function HomePage() {
 
         return (
             <TableHead>
-                <TableRow>
+                <TableRow className='countries-list-header'>
                     {headCells.map((headCell: HeadCellProps) => (
                         <TableCell
                             key={headCell.id}
@@ -211,18 +217,77 @@ function HomePage() {
         { id: 'mainCurrency', disablePadding: false, label: t('homepage.mainCurrency'), align: 'right', sortable: false },
     ];
 
+    const handleFilterChange = (event: any) => {
+        // console.log(event.target.value, event.target.name);
+        const value = event.target.value;
+        const fieldName = event.target.name;
+
+        let url = '';
+        if (value) {
+            switch(fieldName) {
+                case 'countryName':
+                    url = 'https://restcountries.eu/rest/v2/name/';
+                    break;
+                case 'currency':
+                    url = 'https://restcountries.eu/rest/v2/currency/';
+                    break;
+                case 'language':
+                    url = 'https://restcountries.eu/rest/v2/lang/';
+                    break;
+                case 'population':
+                    searchByPopulationNumber(value);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if(url && !fetchingData) {
+            setFetchingData(true);
+            fetchDataFromUrl(url+value);
+        } else {
+            if (!value) {
+                fetchDataFromUrl('https://restcountries.eu/rest/v2/all?fields=flag;name;population;languages;currencies');
+            }
+        }
+    }
+
+    const fetchDataFromUrl = (url: string, onSuccess?: any) => {
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                setFetchingData(false);
+                setCountries(data && data.length ? data : []);
+                if (onSuccess) {
+                    onSuccess();
+                }
+            })
+            .catch((error) => {
+                setFetchingData(false);
+                console.error('Error:', error);
+            });
+    }
+
+    const searchByPopulationNumber = (value: string) => {
+        fetchDataFromUrl('https://restcountries.eu/rest/v2/all?fields=flag;name;population;languages;currencies', () => {
+            let newCountryList = countries.filter((el: any) => (el.population + '').indexOf(value) > -1);
+            setCountries(newCountryList);
+        })
+    }
+
+    const goToCountryDetail = (countryCode: string) => {
+        history.push("/country/"+ countryCode);
+    }
+
     return (
         <div className='padding-20'>
             {countries &&
             <div>
-                <div className='text-align-right margin-bottom-10'>
-                    <Tooltip title="Filter list">
-                        <Button startIcon={<FilterList />}>
-                            {t('homepage.filters')}
-                        </Button>
-                    </Tooltip>
-                </div>
+                <HomePageFilters handleFilterChange={handleFilterChange}/>
                 <TableContainer component={Paper}>
+                    {fetchingData &&
+                        <LinearProgress />
+                    }
                     <Table aria-label="world countries" size="small">
                         <EnhancedTableHead
                             order={order}
@@ -234,7 +299,7 @@ function HomePage() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((country: any, index: number) => {
                                     return (
-                                        <TableRow key={index}>
+                                        <StyledTableRow key={index} className='cursor-pointer'>
                                             <TableCell align="center" style={{ width: '60px'}}>
                                                 <img src={country.flag} style={{width: '30px'}} />
                                             </TableCell>
@@ -244,7 +309,7 @@ function HomePage() {
                                             <TableCell align="right">
                                                 {country.currencies[0].symbol + " (" + country.currencies[0].code + ")"}
                                             </TableCell>
-                                        </TableRow>
+                                        </StyledTableRow>
                                     )
                                 })}
                         </TableBody>

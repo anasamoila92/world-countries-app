@@ -5,7 +5,10 @@ const translationEN = {
     population: 'Population',
     mainLanguage: 'Main Language',
     mainCurrency: 'Main Currency',
-    filters: 'Filters'
+    filters: 'Filters',
+    countryName: 'Country Name',
+    currency: 'Currency',
+    language: 'Language',
   },
   notFound: {
     error404: 'Error 404',
