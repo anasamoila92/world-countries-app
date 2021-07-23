@@ -8,7 +8,13 @@ const translationEN = {
     filters: 'Filters',
     countryName: 'Country Name',
     currency: 'Currency',
+    currencies: 'Currencies',
     language: 'Language',
+    region: 'Region',
+    currentTime: 'Current Time',
+  },
+  countryDetails: {
+    back: 'Back'
   },
   notFound: {
     error404: 'Error 404',

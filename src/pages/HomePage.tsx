@@ -75,7 +75,7 @@ function HomePage() {
 
     useEffect(() => {
         setFetchingData(true);
-        fetchDataFromUrl('https://restcountries.eu/rest/v2/all?fields=flag;name;population;languages;currencies')
+        fetchDataFromUrl('https://restcountries.eu/rest/v2/all')
     }, [])
 
     const handleChangePage = (event: any, newPage: number) => {
@@ -218,7 +218,6 @@ function HomePage() {
     ];
 
     const handleFilterChange = (event: any) => {
-        // console.log(event.target.value, event.target.name);
         const value = event.target.value;
         const fieldName = event.target.name;
 
@@ -247,7 +246,7 @@ function HomePage() {
             fetchDataFromUrl(url+value);
         } else {
             if (!value) {
-                fetchDataFromUrl('https://restcountries.eu/rest/v2/all?fields=flag;name;population;languages;currencies');
+                fetchDataFromUrl('https://restcountries.eu/rest/v2/all');
             }
         }
     }
@@ -269,7 +268,7 @@ function HomePage() {
     }
 
     const searchByPopulationNumber = (value: string) => {
-        fetchDataFromUrl('https://restcountries.eu/rest/v2/all?fields=flag;name;population;languages;currencies', () => {
+        fetchDataFromUrl('https://restcountries.eu/rest/v2/all', () => {
             let newCountryList = countries.filter((el: any) => (el.population + '').indexOf(value) > -1);
             setCountries(newCountryList);
         })
@@ -299,7 +298,11 @@ function HomePage() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((country: any, index: number) => {
                                     return (
-                                        <StyledTableRow key={index} className='cursor-pointer'>
+                                        <StyledTableRow
+                                            key={index}
+                                            className='cursor-pointer'
+                                            onClick={() => goToCountryDetail(country.alpha3Code)}
+                                        >
                                             <TableCell align="center" style={{ width: '60px'}}>
                                                 <img src={country.flag} style={{width: '30px'}} />
                                             </TableCell>

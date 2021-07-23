@@ -8,14 +8,14 @@ function NotFound({...props}) {
         <div className='margin-bottom-30'>
             <Box display="flex" alignItems='center' height={1}>
                 <Grid container>
-                    <Grid item xs={2}>
+                    <Grid item sm={2} xs={12}>
                         <Tooltip title="Filter list">
                             <Button color="primary" startIcon={<FilterList />}>
                                 {t('homepage.filters')}
                             </Button>
                         </Tooltip>
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid item sm={10} xs={12}>
                         <FormControl className='margin-right-20'>
                             <TextField
                                 id="countryName"
