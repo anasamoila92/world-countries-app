@@ -43,8 +43,8 @@ function BarChart({...props}) {
                                             <TextField {...params} label={t('homepage.region')} variant="outlined" />
                                         }
                                         disableClearable
-                                        freeSolo
                                         size="small"
+                                        clearOnBlur
                                         onChange={(event, value) =>
                                             onSelect(value, index, "region")
                                         }
@@ -60,8 +60,8 @@ function BarChart({...props}) {
                                             <TextField {...params} label={t('homepage.country')} variant="outlined" />
                                         }
                                         disableClearable
-                                        freeSolo
                                         size="small"
+                                        clearOnBlur
                                         onChange={(event, value) =>
                                             onSelect(value, index, "country")
                                         }
