@@ -77,15 +77,14 @@ function BarChart({...props}) {
                                         key={row.region}
                                     />
                                 </Grid>
-                                <Grid item xs={4}>
-                                    zzz
+                                <Grid item xs={4} className='text-align-right'>
+                                    <Button variant="contained" color="secondary" onClick={()=>{}}>
+                                        {t('barChart.remove')}
+                                    </Button>
                                 </Grid>
                             </Grid>)
                         })}
                     </div>
-                    {/*<Button variant="outlined" color="primary" startIcon={<ArrowBack />} onClick={goBackToHomepage}>*/}
-                    {/*    {t('countryDetails.back')}*/}
-                    {/*</Button>*/}
                 </Grid>
                 <Grid item md={8} sm={12} xs={12}>
                     ceva

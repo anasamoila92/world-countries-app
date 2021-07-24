@@ -18,6 +18,9 @@ const translationEN = {
   countryDetails: {
     back: 'Back'
   },
+  barChart: {
+    remove: 'Remove'
+  },
   notFound: {
     error404: 'Error 404',
     linkBroken: 'Oops! The link appears to be broken.'
