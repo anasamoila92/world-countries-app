@@ -12,7 +12,8 @@ const translationEN = {
     language: 'Language',
     region: 'Region',
     currentTime: 'Current Time',
-    barChart: 'Bar Chart'
+    barChart: 'Bar Chart',
+    country: 'Country'
   },
   countryDetails: {
     back: 'Back'

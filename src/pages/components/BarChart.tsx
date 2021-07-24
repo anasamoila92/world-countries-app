@@ -8,54 +8,77 @@ interface row {
     id: number;
     region?: string;
     country?: string;
-    population?:  number;
+    population?: number;
 }
 
 function BarChart({...props}) {
     const {t} = useTranslation();
-    const [rows, setRows] = useState<row[]>([{id: 0}]);
+    const [rows, setRows] = useState<row[]>([{id: 0, region: undefined, country: undefined, population: undefined}]);
 
-    const onSelectRegion = (value: any, index: number) => {
-        const newRows = rows.map((el, i) => { return i === index ? {...el, region: value.region} : el});
-        console.log(newRows);
+    const onSelect = (value: any, index: number, fieldName: string) => {
+        const newRows = rows.map((el, i) => { return i === index ? {...el, [fieldName]: value[fieldName]} : el});
+        if (fieldName === 'region') {
+            newRows[index].country = undefined;
+        }
         setRows(newRows);
     }
 
     return (
-        <div className='margin-top-50'>
+        <div className='margin-top-50 margin-bottom-100'>
             <Grid container>
-                <Grid item sm={4} xs={12}>
+                <Grid item md={4} sm={12} xs={12}>
                     <Typography variant="h6" className='margin-bottom-10'>
                         {t('homepage.barChart')}
                     </Typography>
                     <hr />
                     <div className='margin-top-20'>
                         {rows.map((row: any, index) => {
-                            return (<div>
-                                <Autocomplete
-                                    id={"region" + index}
-                                    options={uniqBy(props.countries, 'region')}
-                                    getOptionLabel={(option: any) => option.region}
-                                    style={{ width: 300 }}
-                                    renderInput={(params: any) =>
-                                        <TextField {...params} label="Region" variant="outlined" />
-                                    }
-                                    disableClearable
-                                    freeSolo
-                                    size="small"
-                                    value={row.region}
-                                    onChange={(event, value) =>
-                                        onSelectRegion(value, index)
-                                    }
-                                />
-                            </div>)
+                            return (<Grid container key={index}>
+                                <Grid item xs={4}>
+                                    <Autocomplete
+                                        id={"region" + index}
+                                        options={uniqBy(props.countries, 'region')}
+                                        getOptionLabel={(option: any) => option.region}
+                                        renderInput={(params: any) =>
+                                            <TextField {...params} label={t('homepage.region')} variant="outlined" />
+                                        }
+                                        disableClearable
+                                        freeSolo
+                                        size="small"
+                                        onChange={(event, value) =>
+                                            onSelect(value, index, "region")
+                                        }
+                                        className='margin-right-10'
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Autocomplete
+                                        id={"country" + index}
+                                        options={uniqBy(props.countries.filter((el: row) => el.region === row.region), 'country')}
+                                        getOptionLabel={(option: any) => option.country}
+                                        renderInput={(params: any) =>
+                                            <TextField {...params} label={t('homepage.country')} variant="outlined" />
+                                        }
+                                        disableClearable
+                                        freeSolo
+                                        size="small"
+                                        onChange={(event, value) =>
+                                            onSelect(value, index, "country")
+                                        }
+                                        className='margin-right-10'
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    zzz
+                                </Grid>
+                            </Grid>)
                         })}
                     </div>
                     {/*<Button variant="outlined" color="primary" startIcon={<ArrowBack />} onClick={goBackToHomepage}>*/}
                     {/*    {t('countryDetails.back')}*/}
                     {/*</Button>*/}
                 </Grid>
-                <Grid item sm={8} xs={12}>
+                <Grid item md={8} sm={12} xs={12}>
                     ceva
                 </Grid>
             </Grid>
