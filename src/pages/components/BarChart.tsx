@@ -57,7 +57,15 @@ function BarChart({...props}) {
                                         options={uniqBy(props.countries.filter((el: row) => el.region === row.region), 'country')}
                                         getOptionLabel={(option: any) => option.country}
                                         renderInput={(params: any) =>
-                                            <TextField {...params} label={t('homepage.country')} variant="outlined" />
+                                            <TextField
+                                                {...params}
+                                                label={t('homepage.country')}
+                                                variant="outlined"
+                                                inputProps={{
+                                                    ...params.inputProps,
+                                                    autoComplete: 'new-password', // disable autocomplete and autofill
+                                                }}
+                                            />
                                         }
                                         disableClearable
                                         size="small"
@@ -66,6 +74,7 @@ function BarChart({...props}) {
                                             onSelect(value, index, "country")
                                         }
                                         className='margin-right-10'
+                                        key={row.region}
                                     />
                                 </Grid>
                                 <Grid item xs={4}>
