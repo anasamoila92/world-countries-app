@@ -23,6 +23,11 @@ function BarChart({...props}) {
         setRows(newRows);
     }
 
+    const removeRow = (index: number) => {
+        const newRows = rows.filter(el => el.id !== index);
+        setRows(newRows);
+    }
+
     return (
         <div className='margin-top-50 margin-bottom-100'>
             <Grid container>
@@ -78,7 +83,7 @@ function BarChart({...props}) {
                                     />
                                 </Grid>
                                 <Grid item xs={4} className='text-align-right'>
-                                    <Button variant="contained" color="secondary" onClick={()=>{}}>
+                                    <Button variant="contained" color="secondary" onClick={() => removeRow(index)}>
                                         {t('barChart.remove')}
                                     </Button>
                                 </Grid>
