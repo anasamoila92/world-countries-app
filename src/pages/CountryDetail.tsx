@@ -44,7 +44,6 @@ function CountryDetail() {
         fetch(`https://restcountries.eu/rest/v2/alpha/${countryCode}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 setCountryDetails(data ? data : {});
             })
             .catch((error) => {

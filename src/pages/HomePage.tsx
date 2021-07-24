@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import { LastPage, FirstPage, KeyboardArrowRight, KeyboardArrowLeft } from '@material-ui/icons';
 import HomePageFilters from "./components/HomePageFilters";
+import BarChart from "./components/BarChart";
 import { useHistory } from "react-router-dom";
 
 
@@ -336,6 +337,16 @@ function HomePage() {
                         </TableFooter>
                     </Table>
                 </TableContainer>
+                <BarChart
+                    countries={countries.map((el: any) => {
+                        return {
+                            code: el.code,
+                            region: el.region,
+                            country: el.name,
+                            population: el.population
+                        }
+                    })}
+                />
             </div>
             }
         </div>
