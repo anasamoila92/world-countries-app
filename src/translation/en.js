@@ -19,7 +19,8 @@ const translationEN = {
     back: 'Back'
   },
   barChart: {
-    remove: 'Remove'
+    remove: 'Remove',
+    addMore: 'Add More'
   },
   notFound: {
     error404: 'Error 404',

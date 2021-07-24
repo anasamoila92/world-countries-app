@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
-import {Typography, TextField, Card, CardContent, Grid, Button} from '@material-ui/core';
+import {Typography, TextField, ThemeProvider, createTheme, Grid, Button} from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {uniqBy} from "lodash";
 
 interface row {
@@ -24,9 +25,22 @@ function BarChart({...props}) {
     }
 
     const removeRow = (index: number) => {
-        const newRows = rows.filter(el => el.id !== index);
+        let i = 0;
+        const newRows = rows.filter((el: row) => {
+            if (el.id !== index) {
+                const newRow = {...el, id: i};
+                i++;
+                return newRow;
+            }
+        });
         setRows(newRows);
     }
+
+    const theme = createTheme({
+        palette: {
+            primary: green,
+        },
+    });
 
     return (
         <div className='margin-top-50 margin-bottom-100'>
@@ -89,6 +103,14 @@ function BarChart({...props}) {
                                 </Grid>
                             </Grid>)
                         })}
+                        {rows && rows.length > 0 &&
+                            <hr />
+                        }
+                        <ThemeProvider theme={theme}>
+                            <Button variant="contained" color="secondary" onClick={() => {}}>
+                                {t('barChart.addMore')}
+                            </Button>
+                        </ThemeProvider>
                     </div>
                 </Grid>
                 <Grid item md={8} sm={12} xs={12}>
